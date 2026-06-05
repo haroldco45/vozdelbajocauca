@@ -4,16 +4,14 @@ exports.handler = async function(event) {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
-
   try {
     const body = JSON.parse(event.body);
     const payload = JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-sonnet-4-5',
       max_tokens: 1000,
       system: body.system,
       messages: body.messages
     });
-
     const data = await new Promise((resolve, reject) => {
       const req = https.request({
         hostname: 'api.anthropic.com',
@@ -34,7 +32,6 @@ exports.handler = async function(event) {
       req.write(payload);
       req.end();
     });
-
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
